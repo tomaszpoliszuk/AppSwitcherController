@@ -1,0 +1,11 @@
+Package: com.tomaszpoliszuk.appswitchercontroller
+Depends: firmware (>= 13.0), mobilesubstrate, preferenceloader
+Name: App Switcher Controller
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Control your App Switcher
+Author: Tomasz Poliszuk
+Section: Tweaks
+dev: tomaszpoliszuk
+Tag: purpose::extension, compatible::ios13
+Icon: file:///Library/PreferenceBundles/AppSwitcherControllerPreferences.bundle/icons/AppSwitcherController@3x.png

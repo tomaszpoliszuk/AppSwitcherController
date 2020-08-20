@@ -1,0 +1,180 @@
+{
+	title = "App Switcher Controller";
+	items = (
+		{
+			cell = PSSwitchCell;
+			key = "enableTweak";
+			label = "Enable Tweak";
+			default = 1;
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			icon = icons/AppSwitcherController.png;
+			height = 55;
+		},
+		{
+			cell = PSGroupCell;
+			label = "Switcher Style";
+		},
+		{
+			cell = PSSegmentCell;
+			key = "switcherStyle";
+			default = 0;
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			validValues = (
+				0,
+				1,
+				2,
+			);
+			validTitles = (
+				Default,
+				iPhone,
+				iPad,
+			);
+			height = 55;
+		},
+		{
+			cell = PSGroupCell;
+			label = "";
+		},
+		{
+			cell = PSLinkCell;
+			label = "App Switcher Cards";
+			detail = "PSListController";
+			title = "App Switcher Cards";
+			items = (
+				{
+					cell = PSSwitchCell;
+					key = "showAppIcon";
+					label = "App Icon";
+					default = 1;
+					defaults = com.tomaszpoliszuk.appswitchercontroller;
+					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+				},
+				{
+					cell = PSSwitchCell;
+					key = "showAppName";
+					label = "App Name";
+					default = 1;
+					defaults = com.tomaszpoliszuk.appswitchercontroller;
+					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+				},
+			);
+		},
+		{
+			cell = PSLinkCell;
+			label = "App Switcher Background";
+			detail = "PSListController";
+			title = "App Switcher Background";
+			items = (
+				{
+					cell = PSGroupCell;
+					label = "Wallpaper Scale";
+				},
+				{
+					cell = PSSliderCell;
+					key = "setWallpaperScale";
+					showValue = 1;
+					min = 0;
+					max = 10;
+					default = 1.2;
+					defaults = com.tomaszpoliszuk.appswitchercontroller;
+					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+				},
+				{
+					cell = PSGroupCell;
+					label = "HomeScreen Scale";
+				},
+				{
+					cell = PSSliderCell;
+					key = "setHomeScreenScale";
+					showValue = 1;
+					min = 0.02;
+					max = 15;
+					default = 0.9;
+					defaults = com.tomaszpoliszuk.appswitchercontroller;
+					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+				},
+				{
+					cell = PSGroupCell;
+					label = "HomeScreen Opacity";
+				},
+				{
+					cell = PSSliderCell;
+					key = "setHomeScreenOpacity";
+					showValue = 1;
+					min = 0;
+					max = 1;
+					default = 0.5;
+					defaults = com.tomaszpoliszuk.appswitchercontroller;
+					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+				},
+				{
+					cell = PSGroupCell;
+					label = "Blur";
+				},
+				{
+					cell = PSSliderCell;
+					key = "setHomeScreenBlur";
+					showValue = 1;
+					min = 0;
+					max = 1;
+					default = 1;
+					defaults = com.tomaszpoliszuk.appswitchercontroller;
+					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+				},
+				{
+					cell = PSGroupCell;
+					label = "Dimming";
+				},
+				{
+					cell = PSSliderCell;
+					key = "setDimmingAlpha";
+					showValue = 1;
+					min = 0;
+					max = 1;
+					default = 0.67;
+					defaults = com.tomaszpoliszuk.appswitchercontroller;
+					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+				},
+			);
+		},
+		{
+			cell = PSGroupCell;
+			label = "Settings";
+		},
+		{
+			cell = PSButtonCell;
+			label = "Reset Settings";
+			action = resetSettings;
+		},
+		{
+			cell = PSGroupCell;
+			label = "Related Links";
+		},
+		{
+			cell = PSButtonCell;
+			label = "Source Code";
+			action = sourceCode;
+			icon = "icons/code.png";
+		},
+		{
+			cell = PSButtonCell;
+			label = "Report Issue @ GitHub";
+			action = reportIssueAtGithub;
+			icon = "icons/bug.png";
+		},
+		{
+			cell = PSButtonCell;
+			label = "Tomasz Poliszuk @ Github";
+			action = TomaszPoliszukAtGithub;
+			icon = "icons/github.png";
+		},
+		{
+			cell = PSButtonCell;
+			label = "Tomasz Poliszuk @ Twitter";
+			action = TomaszPoliszukAtTwitter;
+			icon = "icons/twitter.png";
+		},
+	);
+}
