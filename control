@@ -4,8 +4,12 @@ Name: App Switcher Controller
 Version: 1.0
 Architecture: iphoneos-arm
 Description: Control your App Switcher
+Homepage: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=appswitchercontrollerDp
+Depiction: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=appswitchercontrollerDp
+Maintainer: BigBoss <bigboss@thebigboss.org>
 Author: Tomasz Poliszuk
+Sponsor: thebigboss.org <http://thebigboss.org>
 Section: Tweaks
 dev: tomaszpoliszuk
 Tag: purpose::extension, compatible::ios13
-Icon: file:///Library/PreferenceBundles/AppSwitcherControllerPreferences.bundle/icons/AppSwitcherController@3x.png
+Icon: file:///Library/PreferenceBundles/AppSwitcherControllerSettings.bundle/icons/AppSwitcherController@3x.png

@@ -15,12 +15,12 @@ NSString *domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 -(BOOL)containsSpecifier:(id)arg1;
 @end
 
-@interface AppSwitcherControllerMainPreferences : PSListController
+@interface AppSwitcherControllerMainSettings : PSListController
 @property (nonatomic, retain) NSMutableDictionary *savedSpecifiers;
 @property (nonatomic, retain) UIBarButtonItem *respringButton;
 @end
 
-@implementation AppSwitcherControllerMainPreferences
+@implementation AppSwitcherControllerMainSettings
 - (NSArray *)specifiers {
 	if (!_specifiers) {
 		_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];

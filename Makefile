@@ -14,5 +14,5 @@ $(TWEAK_NAME)_FILES = $(TWEAK_NAME).xm
 $(TWEAK_NAME)_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
-SUBPROJECTS += AppSwitcherControllerPreferences
+SUBPROJECTS += AppSwitcherControllerSettings
 include $(THEOS_MAKE_PATH)/aggregate.mk
