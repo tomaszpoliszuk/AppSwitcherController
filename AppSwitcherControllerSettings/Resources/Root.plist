@@ -3,8 +3,8 @@
 	items = (
 		{
 			cell = PSSwitchCell;
-			key = "enableTweak";
-			label = "Enable Tweak";
+			key = enableTweak;
+			label = ENABLE_TWEAK;
 			default = 1;
 			defaults = com.tomaszpoliszuk.appswitchercontroller;
 			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
@@ -141,38 +141,45 @@
 		},
 		{
 			cell = PSGroupCell;
-			label = "Settings";
+			label = " ";
 		},
 		{
 			cell = PSButtonCell;
-			label = "Reset Settings";
+			label = RESET_SETTINGS;
 			action = resetSettings;
+			alignment = center;
 		},
 		{
 			cell = PSGroupCell;
-			label = "Related Links";
+			label = RELATED_LINKS;
 		},
 		{
 			cell = PSButtonCell;
-			label = "Source Code";
+			label = SOURCE_CODE;
 			action = sourceCode;
 			icon = "icons/code.png";
 		},
 		{
 			cell = PSButtonCell;
-			label = "Report Issue @ GitHub";
-			action = reportIssueAtGithub;
+			label = KNOWN_ISSUES;
+			action = knownIssues;
 			icon = "icons/bug.png";
 		},
 		{
 			cell = PSButtonCell;
-			label = "Tomasz Poliszuk @ Github";
+			label = TOMASZ_POLISZUK_AT_BIGBOSS;
+			action = TomaszPoliszukAtBigBoss;
+			icon = "icons/packages.png";
+		},
+		{
+			cell = PSButtonCell;
+			label = TOMASZ_POLISZUK_AT_GITHUB;
 			action = TomaszPoliszukAtGithub;
 			icon = "icons/github.png";
 		},
 		{
 			cell = PSButtonCell;
-			label = "Tomasz Poliszuk @ Twitter";
+			label = TOMASZ_POLISZUK_AT_TWITTER;
 			action = TomaszPoliszukAtTwitter;
 			icon = "icons/twitter.png";
 		},
