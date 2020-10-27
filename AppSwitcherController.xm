@@ -1,4 +1,4 @@
-NSString *domainString = @"com.tomaszpoliszuk.appswitchercontroller";
+NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 
 NSMutableDictionary *tweakSettings;
 
@@ -25,11 +25,11 @@ void SettingsChanged() {
 	showAppIcon = [([tweakSettings objectForKey:@"showAppIcon"] ?: @(YES)) boolValue];
 	showAppName = [([tweakSettings objectForKey:@"showAppName"] ?: @(YES)) boolValue];
 
-	setHomeScreenBlur = [([tweakSettings valueForKey:@"setHomeScreenBlur"] ?: @(1.000000)) doubleValue];
-	setHomeScreenOpacity = [([tweakSettings valueForKey:@"setHomeScreenOpacity"] ?: @(0.500000)) doubleValue];
-	setWallpaperScale = [([tweakSettings valueForKey:@"setWallpaperScale"] ?: @(1.200000)) doubleValue];
-	setHomeScreenScale = [([tweakSettings valueForKey:@"setHomeScreenScale"] ?: @(0.900000)) doubleValue];
-	setDimmingAlpha = [([tweakSettings valueForKey:@"setDimmingAlpha"] ?: @(0.670000)) doubleValue];
+	setHomeScreenBlur = [([tweakSettings valueForKey:@"setHomeScreenBlur"] ?: @(1)) doubleValue];
+	setHomeScreenOpacity = [([tweakSettings valueForKey:@"setHomeScreenOpacity"] ?: @(0.5)) doubleValue];
+	setWallpaperScale = [([tweakSettings valueForKey:@"setWallpaperScale"] ?: @(1.2)) doubleValue];
+	setHomeScreenScale = [([tweakSettings valueForKey:@"setHomeScreenScale"] ?: @(0.9)) doubleValue];
+	setDimmingAlpha = [([tweakSettings valueForKey:@"setDimmingAlpha"] ?: @(0.6)) doubleValue];
 }
 
 %hook SBAppSwitcherSettings
@@ -37,72 +37,71 @@ void SettingsChanged() {
 	long long origValue = %orig;
 	if ( enableTweak ) {
 		return switcherStyle;
-	} else {
-		return origValue;
 	}
+	return origValue;
 }
 %end
 
 %hook SBFluidSwitcherItemContainer
 - (void)setTitleOpacity:(double)arg1 {
-	double origValue = arg1;
 	if ( enableTweak && !showAppName ) {
-		origValue = 0;
+		arg1 = 0;
 	}
-	%orig(origValue);
+	%orig;
 }
 %end
 
 %hook SBFluidSwitcherIconImageContainerView
 - (void)setImage:(id)arg1 animated:(bool)arg2 {
-	id origValue = arg1;
 	if ( enableTweak && !showAppIcon ) {
-		origValue = nil;
+		arg1 = nil;
 	}
-	%orig(origValue, arg2);
+	%orig;
 }
 %end
 
 %hook SBFluidSwitcherAnimationSettings
 - (void)setHomeScreenBlurInSwitcher:(double)arg1 {
 	if ( enableTweak && setHomeScreenBlur != 999 ) {
-		%orig(setHomeScreenBlur);
-	} else {
-		%orig;
+		arg1 = setHomeScreenBlur;
 	}
+	%orig;
 }
 - (void)setHomeScreenOpacityInSwitcher:(double)arg1 {
 	if ( enableTweak && setHomeScreenOpacity != 999 ) {
-		%orig(setHomeScreenOpacity);
-	} else {
-		%orig;
+		arg1 = setHomeScreenOpacity;
 	}
+	%orig;
 }
 - (void)setWallpaperScaleInSwitcher:(double)arg1 {
 	if ( enableTweak && setWallpaperScale != 999 ) {
-		%orig(setWallpaperScale);
-	} else {
-		%orig;
+		arg1 = setWallpaperScale;
 	}
+	%orig;
 }
 - (void)setHomeScreenScaleInSwitcher:(double)arg1 {
 	if ( enableTweak && setHomeScreenScale != 999 ) {
-		%orig(setHomeScreenScale);
-	} else {
-		%orig;
+		arg1 = setHomeScreenScale;
 	}
+	%orig;
 }
 - (void)setDimmingAlphaInSwitcher:(double)arg1 {
 	if ( enableTweak && setDimmingAlpha != 999 ) {
-		%orig(setDimmingAlpha);
-	} else {
-		%orig;
+		arg1 = setDimmingAlpha;
 	}
+	%orig;
 }
 %end
 
 %ctor {
 	SettingsChanged();
-	CFNotificationCenterAddObserver( CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)SettingsChanged, CFSTR("com.tomaszpoliszuk.appswitchercontroller.settingschanged"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately );
+	CFNotificationCenterAddObserver(
+		CFNotificationCenterGetDarwinNotifyCenter(),
+		NULL,
+		(CFNotificationCallback)SettingsChanged,
+		CFSTR("com.tomaszpoliszuk.appswitchercontroller.settingschanged"),
+		NULL,
+		CFNotificationSuspensionBehaviorDeliverImmediately
+	);
 	%init;
 }
