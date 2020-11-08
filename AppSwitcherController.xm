@@ -1,19 +1,31 @@
+@interface SBFluidSwitcherIconImageContainerView : UIView
+@end
+
 NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 
 NSMutableDictionary *tweakSettings;
 
-static BOOL enableTweak;
+static bool enableTweak;
 
 static long long switcherStyle;
 
-static BOOL showAppIcon;
-static BOOL showAppName;
+static bool showAppIcon;
+static bool showAppName;
 
-static double setHomeScreenBlur;
-static double setHomeScreenOpacity;
-static double setWallpaperScale;
-static double setHomeScreenScale;
-static double setDimmingAlpha;
+static NSString *deckCardScaleInSwitcher;
+static NSString *deckDepthPadding;
+
+static NSString *gridCardScaleInSwitcher;
+static NSString *gridYAxisSpacingPortrait;
+static NSString *gridXAxisSpacingPortrait;
+static NSString *gridYAxisSpacingLandscape;
+static NSString *gridXAxisSpacingLandscape;
+
+static NSString *wallpaperScale;
+static NSString *homeScreenScale;
+static NSString *homeScreenOpacity;
+static NSString *homeScreenBlur;
+static NSString *dimmingAlpha;
 
 void SettingsChanged() {
 	NSUserDefaults *tweakSettings = [[NSUserDefaults alloc] initWithSuiteName:domainString];
@@ -25,20 +37,28 @@ void SettingsChanged() {
 	showAppIcon = [([tweakSettings objectForKey:@"showAppIcon"] ?: @(YES)) boolValue];
 	showAppName = [([tweakSettings objectForKey:@"showAppName"] ?: @(YES)) boolValue];
 
-	setHomeScreenBlur = [([tweakSettings valueForKey:@"setHomeScreenBlur"] ?: @(1)) doubleValue];
-	setHomeScreenOpacity = [([tweakSettings valueForKey:@"setHomeScreenOpacity"] ?: @(0.5)) doubleValue];
-	setWallpaperScale = [([tweakSettings valueForKey:@"setWallpaperScale"] ?: @(1.2)) doubleValue];
-	setHomeScreenScale = [([tweakSettings valueForKey:@"setHomeScreenScale"] ?: @(0.9)) doubleValue];
-	setDimmingAlpha = [([tweakSettings valueForKey:@"setDimmingAlpha"] ?: @(0.6)) doubleValue];
+	deckCardScaleInSwitcher = [tweakSettings objectForKey:@"deckCardScaleInSwitcher"];
+	deckDepthPadding = [tweakSettings objectForKey:@"deckDepthPadding"];
+
+	gridCardScaleInSwitcher = [tweakSettings objectForKey:@"gridCardScaleInSwitcher"];
+	gridYAxisSpacingPortrait = [tweakSettings objectForKey:@"gridYAxisSpacingPortrait"];
+	gridXAxisSpacingPortrait = [tweakSettings objectForKey:@"gridXAxisSpacingPortrait"];
+	gridYAxisSpacingLandscape = [tweakSettings objectForKey:@"gridYAxisSpacingLandscape"];
+	gridXAxisSpacingLandscape = [tweakSettings objectForKey:@"gridXAxisSpacingLandscape"];
+
+	wallpaperScale = [tweakSettings objectForKey:@"wallpaperScale"];
+	homeScreenScale = [tweakSettings objectForKey:@"homeScreenScale"];
+	homeScreenOpacity = [tweakSettings objectForKey:@"homeScreenOpacity"];
+	homeScreenBlur = [tweakSettings objectForKey:@"homeScreenBlur"];
+	dimmingAlpha = [tweakSettings objectForKey:@"dimmingAlpha"];
 }
 
-%hook SBAppSwitcherSettings
-- (long long)switcherStyle {
-	long long origValue = %orig;
-	if ( enableTweak ) {
-		return switcherStyle;
+%hook SBFluidSwitcherIconImageContainerView
+- (void)didMoveToWindow {
+	%orig;
+	if ( enableTweak && !showAppIcon ) {
+		self.hidden = YES;
 	}
-	return origValue;
 }
 %end
 
@@ -51,43 +71,92 @@ void SettingsChanged() {
 }
 %end
 
-%hook SBFluidSwitcherIconImageContainerView
-- (void)setImage:(id)arg1 animated:(bool)arg2 {
-	if ( enableTweak && !showAppIcon ) {
-		arg1 = nil;
+%hook SBAppSwitcherSettings
+- (void)setSwitcherStyle:(long long)arg1 {
+	if ( enableTweak ) {
+		arg1 = switcherStyle;
 	}
 	%orig;
+}
+- (double)deckSwitcherPageScale {
+	double origValue = %orig;
+	if ( enableTweak && deckCardScaleInSwitcher.length > 0 ) {
+		return origValue * [deckCardScaleInSwitcher doubleValue] / 100;
+	}
+	return origValue;
+}
+- (double)depthPadding {
+	double origValue = %orig;
+	if ( enableTweak && deckDepthPadding.length > 0 ) {
+		return [deckDepthPadding doubleValue] / 100;
+	}
+	return origValue;
+}
+- (double)gridSwitcherPageScale {
+	double origValue = %orig;
+	if ( enableTweak && gridCardScaleInSwitcher.length > 0 ) {
+		return origValue * [gridCardScaleInSwitcher doubleValue] / 100;
+	}
+	return origValue;
+}
+- (double)gridSwitcherVerticalNaturalSpacingPortrait {
+	double origValue = %orig;
+	if ( enableTweak && gridYAxisSpacingPortrait.length > 0 ) {
+		return [gridYAxisSpacingPortrait doubleValue];
+	}
+	return origValue;
+}
+- (double)gridSwitcherHorizontalInterpageSpacingPortrait {
+	double origValue = %orig;
+	if ( enableTweak && gridXAxisSpacingPortrait.length > 0 ) {
+		return [gridXAxisSpacingPortrait doubleValue];
+	}
+	return origValue;
+}
+- (double)gridSwitcherVerticalNaturalSpacingLandscape {
+	double origValue = %orig;
+	if ( enableTweak && gridYAxisSpacingLandscape.length > 0 ) {
+		return [gridYAxisSpacingLandscape doubleValue];
+	}
+	return origValue;
+}
+- (double)gridSwitcherHorizontalInterpageSpacingLandscape {
+	double origValue = %orig;
+	if ( enableTweak && gridXAxisSpacingLandscape.length > 0 ) {
+		return [gridXAxisSpacingLandscape doubleValue];
+	}
+	return origValue;
 }
 %end
 
 %hook SBFluidSwitcherAnimationSettings
-- (void)setHomeScreenBlurInSwitcher:(double)arg1 {
-	if ( enableTweak && setHomeScreenBlur != 999 ) {
-		arg1 = setHomeScreenBlur;
-	}
-	%orig;
-}
-- (void)setHomeScreenOpacityInSwitcher:(double)arg1 {
-	if ( enableTweak && setHomeScreenOpacity != 999 ) {
-		arg1 = setHomeScreenOpacity;
-	}
-	%orig;
-}
 - (void)setWallpaperScaleInSwitcher:(double)arg1 {
-	if ( enableTweak && setWallpaperScale != 999 ) {
-		arg1 = setWallpaperScale;
+	if ( enableTweak && wallpaperScale.length > 0 ) {
+		arg1 = [wallpaperScale doubleValue] / 100;
 	}
 	%orig;
 }
 - (void)setHomeScreenScaleInSwitcher:(double)arg1 {
-	if ( enableTweak && setHomeScreenScale != 999 ) {
-		arg1 = setHomeScreenScale;
+	if ( enableTweak && homeScreenScale.length > 0 ) {
+		arg1 = [homeScreenScale doubleValue] / 100;
+	}
+	%orig;
+}
+- (void)setHomeScreenOpacityInSwitcher:(double)arg1 {
+	if ( enableTweak && homeScreenOpacity.length > 0 ) {
+		arg1 = [homeScreenOpacity doubleValue] / 100;
+	}
+	%orig;
+}
+- (void)setHomeScreenBlurInSwitcher:(double)arg1 {
+	if ( enableTweak && homeScreenBlur.length > 0 ) {
+		arg1 = [homeScreenBlur doubleValue] / 100;
 	}
 	%orig;
 }
 - (void)setDimmingAlphaInSwitcher:(double)arg1 {
-	if ( enableTweak && setDimmingAlpha != 999 ) {
-		arg1 = setDimmingAlpha;
+	if ( enableTweak && dimmingAlpha.length > 0 ) {
+		arg1 = [dimmingAlpha doubleValue] / 100;
 	}
 	%orig;
 }

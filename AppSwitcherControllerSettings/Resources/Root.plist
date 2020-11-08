@@ -28,116 +28,151 @@
 			);
 			validTitles = (
 				Default,
-				iPhone,
-				iPad,
+				Deck,
+				Grid,
 			);
 			height = 55;
 		},
 		{
 			cell = PSGroupCell;
-			label = "";
-		},
-		{
-			cell = PSLinkCell;
 			label = "App Switcher Cards";
-			detail = "PSListController";
-			title = "App Switcher Cards";
-			items = (
-				{
-					cell = PSSwitchCell;
-					key = "showAppIcon";
-					label = "App Icon";
-					default = 1;
-					defaults = com.tomaszpoliszuk.appswitchercontroller;
-					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
-				},
-				{
-					cell = PSSwitchCell;
-					key = "showAppName";
-					label = "App Name";
-					default = 1;
-					defaults = com.tomaszpoliszuk.appswitchercontroller;
-					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
-				},
-			);
 		},
 		{
-			cell = PSLinkCell;
+			cell = PSSwitchCell;
+			key = "showAppIcon";
+			label = "App Icon";
+			default = 1;
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+		},
+		{
+			cell = PSSwitchCell;
+			key = "showAppName";
+			label = "App Name";
+			default = 1;
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+		},
+		{
+			cell = PSGroupCell;
+			label = "App Switcher Cards (Deck)";
+			footerText = "Please note that 'Spacing between cards' seems to use Fibonacci number to calculate distance between cards.";
+		},
+		{
+			cell = PSEditTextCell;
+			key = deckCardScaleInSwitcher;
+			label = "Card Scale (%)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = deckDepthPadding;
+			label = "Spacing between cards";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSGroupCell;
+			label = "App Switcher Cards (Grid)";
+		},
+		{
+			cell = PSEditTextCell;
+			key = gridCardScaleInSwitcher;
+			label = "Card Scale (%)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = gridYAxisSpacingPortrait;
+			label = "Y-axis Spacing in Portrait (px)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = gridXAxisSpacingPortrait;
+			label = "X-axis Spacing in Portrait (px)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = gridYAxisSpacingLandscape;
+			label = "Y-axis Spacing in Landscape (px)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = gridXAxisSpacingLandscape;
+			label = "X-axis Spacing in Landscape (px)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSGroupCell;
 			label = "App Switcher Background";
-			detail = "PSListController";
-			title = "App Switcher Background";
-			items = (
-				{
-					cell = PSGroupCell;
-					label = "Wallpaper Scale";
-				},
-				{
-					cell = PSSliderCell;
-					key = "setWallpaperScale";
-					showValue = 1;
-					min = 0;
-					max = 10;
-					default = 1.2;
-					defaults = com.tomaszpoliszuk.appswitchercontroller;
-					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
-				},
-				{
-					cell = PSGroupCell;
-					label = "HomeScreen Scale";
-				},
-				{
-					cell = PSSliderCell;
-					key = "setHomeScreenScale";
-					showValue = 1;
-					min = 0.02;
-					max = 15;
-					default = 0.9;
-					defaults = com.tomaszpoliszuk.appswitchercontroller;
-					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
-				},
-				{
-					cell = PSGroupCell;
-					label = "HomeScreen Opacity";
-				},
-				{
-					cell = PSSliderCell;
-					key = "setHomeScreenOpacity";
-					showValue = 1;
-					min = 0;
-					max = 1;
-					default = 0.5;
-					defaults = com.tomaszpoliszuk.appswitchercontroller;
-					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
-				},
-				{
-					cell = PSGroupCell;
-					label = "Blur";
-				},
-				{
-					cell = PSSliderCell;
-					key = "setHomeScreenBlur";
-					showValue = 1;
-					min = 0;
-					max = 1;
-					default = 1;
-					defaults = com.tomaszpoliszuk.appswitchercontroller;
-					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
-				},
-				{
-					cell = PSGroupCell;
-					label = "Dimming";
-				},
-				{
-					cell = PSSliderCell;
-					key = "setDimmingAlpha";
-					showValue = 1;
-					min = 0;
-					max = 1;
-					default = 0.67;
-					defaults = com.tomaszpoliszuk.appswitchercontroller;
-					PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
-				},
-			);
+		},
+		{
+			cell = PSEditTextCell;
+			key = wallpaperScale;
+			label = "Wallpaper Scale (%)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = homeScreenScale;
+			label = "HomeScreen Scale (%)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = homeScreenOpacity;
+			label = "HomeScreen Opacity (%)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = homeScreenBlur;
+			label = "Blur (%)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
+		},
+		{
+			cell = PSEditTextCell;
+			key = dimmingAlpha;
+			label = "Dimming (%)";
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+			keyboard = numbers;
+			isNumeric = 1;
 		},
 		{
 			cell = PSGroupCell;

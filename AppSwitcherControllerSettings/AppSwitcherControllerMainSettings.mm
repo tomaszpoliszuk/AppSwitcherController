@@ -21,20 +21,7 @@ NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 - (void)sendActions:(id)arg1 withResult:(id /* block */)arg2;
 @end
 
-@interface PSControlTableCell : PSTableCell
-- (UIControl *)control;
-@end
-
-@interface PSSwitchTableCell : PSControlTableCell
-@end
-
-@interface PSListController (AppSwitcherController)
--(BOOL)containsSpecifier:(id)arg1;
-@end
-
 @interface AppSwitcherControllerMainSettings : PSListController
-@property (nonatomic, retain) NSMutableDictionary *savedSpecifiers;
-@property (nonatomic, retain) UIBarButtonItem *respringButton;
 @end
 
 @implementation AppSwitcherControllerMainSettings
@@ -51,6 +38,10 @@ NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 		self.navigationItem.rightBarButtonItem = applyButton;
 	}
 	return self;
+}
+- (void)loadView {
+	[super loadView];
+	((UITableView *)[self table]).keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
 }
 -(void)respringDevice {
 	UIAlertController *confirmRespringAlert = [UIAlertController alertControllerWithTitle:@"Respring Device" message:@"Do you want to respring device?" preferredStyle:UIAlertControllerStyleAlert];
