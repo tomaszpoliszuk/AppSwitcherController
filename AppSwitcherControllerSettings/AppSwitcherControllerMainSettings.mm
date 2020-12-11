@@ -19,6 +19,8 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>
 
+#define isiOS13orAbove (kCFCoreFoundationVersionNumber >= 1665.15)
+
 //typedef enum {
 //	None					= 0,
 //	RestartRenderServer		= (1 << 0), // 1 in decimal, also relaunch backboardd
@@ -39,13 +41,28 @@ NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 - (void)sendActions:(id)arg1 withResult:(id /* block */)arg2;
 @end
 
-@interface AppSwitcherControllerMainSettings : PSListController
+@interface AppSwitcherControllerMainSettings : PSListController {
+	NSMutableArray *removeSpecifiers;
+}
 @end
 
 @implementation AppSwitcherControllerMainSettings
 - (NSArray *)specifiers {
 	if (!_specifiers) {
 		_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
+		if ( !isiOS13orAbove ) {
+			removeSpecifiers = [[NSMutableArray alloc]init];
+			for(PSSpecifier* specifier in _specifiers) {
+				NSString* key = [specifier propertyForKey:@"key"];
+				if(
+					[key hasPrefix:@"showStatusBarInAppSwitcherGroup"]
+				) {
+					[removeSpecifiers addObject:specifier];
+				}
+
+			}
+			[_specifiers removeObjectsInArray:removeSpecifiers];
+		}
 	}
 	return _specifiers;
 }

@@ -6,6 +6,7 @@ Control your App Switcher
 
 ## What this tweak do:
 * Choose Switcher Style (Default, Deck, Grid)
+* show Status Bar In App Switcher (iOS 13+)
 * App Switcher Cards:
     * App Icon (enabled, disabled)
     * App Name (enabled, disabled)
@@ -25,7 +26,7 @@ Control your App Switcher
     * Blur
     * Dimming
 
-Configure options from Settings.
+**Configure options from Settings.**
 
 **Screenshots:**
 

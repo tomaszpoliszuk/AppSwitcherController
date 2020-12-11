@@ -35,6 +35,19 @@
 		},
 		{
 			cell = PSGroupCell;
+			label = " ";
+			key = "showStatusBarInAppSwitcherGroup";
+		},
+		{
+			cell = PSSwitchCell;
+			key = showStatusBarInAppSwitcher;
+			label = "show Status Bar In App Switcher";
+			default = 0;
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+		},
+		{
+			cell = PSGroupCell;
 			label = "App Switcher Cards";
 		},
 		{

@@ -19,6 +19,10 @@
 @interface SBFluidSwitcherIconImageContainerView : UIView
 @end
 
+@interface SBMainSwitcherViewController : UIViewController
+- (bool)isMainSwitcherVisible;
+@end
+
 NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 
 NSMutableDictionary *tweakSettings;
@@ -26,6 +30,8 @@ NSMutableDictionary *tweakSettings;
 static bool enableTweak;
 
 static long long switcherStyle;
+
+static bool showStatusBarInAppSwitcher;
 
 static bool showAppIcon;
 static bool showAppName;
@@ -51,6 +57,8 @@ void SettingsChanged() {
 	enableTweak = [([tweakSettings objectForKey:@"enableTweak"] ?: @(YES)) boolValue];
 
 	switcherStyle = [([tweakSettings valueForKey:@"switcherStyle"] ?: @(0)) integerValue];
+
+	showStatusBarInAppSwitcher = [([tweakSettings objectForKey:@"showStatusBarInAppSwitcher"] ?: @(NO)) boolValue];
 
 	showAppIcon = [([tweakSettings objectForKey:@"showAppIcon"] ?: @(YES)) boolValue];
 	showAppName = [([tweakSettings objectForKey:@"showAppName"] ?: @(YES)) boolValue];
@@ -175,6 +183,15 @@ void SettingsChanged() {
 - (void)setDimmingAlphaInSwitcher:(double)arg1 {
 	if ( enableTweak && dimmingAlpha.length > 0 ) {
 		arg1 = [dimmingAlpha doubleValue] / 100;
+	}
+	%orig;
+}
+%end
+
+%hook SBMainSwitcherViewController
+- (void)switcherContentController:(id)arg1 setContainerStatusBarHidden:(bool)arg2 animationDuration:(double)arg3 {
+	if ( enableTweak && showStatusBarInAppSwitcher && [self isMainSwitcherVisible]) {
+		arg2 = NO;
 	}
 	%orig;
 }
