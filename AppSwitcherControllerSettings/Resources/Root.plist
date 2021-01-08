@@ -35,20 +35,15 @@
 		},
 		{
 			cell = PSGroupCell;
-			label = " ";
-			key = "showStatusBarInAppSwitcherGroup";
+			label = "App Switcher Options";
 		},
 		{
 			cell = PSSwitchCell;
 			key = showStatusBarInAppSwitcher;
 			label = "show Status Bar In App Switcher";
-			default = 0;
+			default = 1;
 			defaults = com.tomaszpoliszuk.appswitchercontroller;
 			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
-		},
-		{
-			cell = PSGroupCell;
-			label = "App Switcher Cards";
 		},
 		{
 			cell = PSSwitchCell;
@@ -68,8 +63,16 @@
 		},
 		{
 			cell = PSGroupCell;
-			label = "App Switcher Cards (Deck)";
+			label = "App Switcher Options (Deck)";
 			footerText = "Please note that 'Spacing between cards' seems to use Fibonacci number to calculate distance between cards.";
+		},
+		{
+			cell = PSSwitchCell;
+			key = allowAppSuggestion;
+			label = "Allow App Suggestion";
+			default = 1;
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
 		},
 		{
 			cell = PSEditTextCell;
@@ -91,7 +94,7 @@
 		},
 		{
 			cell = PSGroupCell;
-			label = "App Switcher Cards (Grid)";
+			label = "App Switcher Options (Grid)";
 		},
 		{
 			cell = PSEditTextCell;

@@ -7,13 +7,14 @@ Control your App Switcher
 ## What this tweak do:
 * Choose Switcher Style (Default, Deck, Grid)
 * show Status Bar In App Switcher (iOS 13+)
-* App Switcher Cards:
+* App Switcher Options:
     * App Icon (enabled, disabled)
     * App Name (enabled, disabled)
-* App Switcher Cards (Deck):
+* App Switcher Options (Deck):
+	* Allow App Suggestion
     * Card Scale (%)
     * Spacing between cards
-* App Switcher Cards (Grid)
+* App Switcher Options (Grid)
     * Card Scale (%)
     * Y-axis Spacing in Portrait (px)
     * X-axis Spacing in Portrait (px)

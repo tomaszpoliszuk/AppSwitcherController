@@ -36,6 +36,7 @@ static bool showStatusBarInAppSwitcher;
 static bool showAppIcon;
 static bool showAppName;
 
+static bool allowAppSuggestion;
 static NSString *deckCardScaleInSwitcher;
 static NSString *deckDepthPadding;
 
@@ -63,6 +64,7 @@ void SettingsChanged() {
 	showAppIcon = [([tweakSettings objectForKey:@"showAppIcon"] ?: @(YES)) boolValue];
 	showAppName = [([tweakSettings objectForKey:@"showAppName"] ?: @(YES)) boolValue];
 
+	allowAppSuggestion = [([tweakSettings objectForKey:@"allowAppSuggestion"] ?: @(YES)) boolValue];
 	deckCardScaleInSwitcher = [tweakSettings objectForKey:@"deckCardScaleInSwitcher"];
 	deckDepthPadding = [tweakSettings objectForKey:@"deckDepthPadding"];
 
@@ -192,6 +194,15 @@ void SettingsChanged() {
 - (void)switcherContentController:(id)arg1 setContainerStatusBarHidden:(bool)arg2 animationDuration:(double)arg3 {
 	if ( enableTweak && showStatusBarInAppSwitcher && [self isMainSwitcherVisible]) {
 		arg2 = NO;
+	}
+	%orig;
+}
+%end
+
+%hook SBSwitcherAppSuggestionViewController
+- (void)loadView {
+	if ( enableTweak && !allowAppSuggestion ) {
+		return;
 	}
 	%orig;
 }
