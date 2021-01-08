@@ -4,7 +4,7 @@ Control your App Switcher
 ## Compatibility
 * iOS 12 and above
 
-## What this tweak do:
+## Features:
 * Choose Switcher Style (Default, Deck, Grid)
 * show Status Bar In App Switcher (iOS 13+)
 * App Switcher Options:
