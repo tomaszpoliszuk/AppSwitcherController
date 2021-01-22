@@ -4,7 +4,7 @@
 		isController = 1;
 		label = "App Switcher Controller";
 		bundle = AppSwitcherControllerSettings;
-		detail = AppSwitcherControllerMainSettings;
+		detail = AppSwitcherControllerRootSettings;
 		icon = icons/AppSwitcherController.png;
 	};
 }

@@ -36,11 +36,21 @@
 		{
 			cell = PSGroupCell;
 			label = "App Switcher Options";
+			footerText = "Show Dock in App Switcher works only with iPad Dock";
 		},
 		{
 			cell = PSSwitchCell;
 			key = showStatusBarInAppSwitcher;
-			label = "show Status Bar In App Switcher";
+			label = "Show Status Bar in App Switcher";
+			default = 1;
+			defaults = com.tomaszpoliszuk.appswitchercontroller;
+			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";
+		},
+		{
+			cell = PSSwitchCell;
+			cellClass = DockControllerSwitchTableCell;
+			key = "showDockInAppSwitcher";
+			label = "Show Dock in App Switcher";
 			default = 1;
 			defaults = com.tomaszpoliszuk.appswitchercontroller;
 			PostNotification = "com.tomaszpoliszuk.appswitchercontroller.settingschanged";

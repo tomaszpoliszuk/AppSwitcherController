@@ -16,12 +16,24 @@
  */
 
 
-@interface SBFluidSwitcherIconImageContainerView : UIView
-@end
+#import "AppSwitcherController.h"
 
-@interface SBMainSwitcherViewController : UIViewController
-- (bool)isMainSwitcherVisible;
-@end
+#define kIsiOS14AndUp (kCFCoreFoundationVersionNumber >= 1740.00)
+#define kIsiOS13AndUp (kCFCoreFoundationVersionNumber >= 1665.15)
+
+#define kIconController [%c(SBIconController) sharedInstance]
+#define kFloatingDockController [kIconController floatingDockController]
+#define kDismissFloatingDockIfPresented [kFloatingDockController _dismissFloatingDockIfPresentedAnimated:YES completionHandler:nil]
+#define kPresentFloatingDockIfDismissed [kFloatingDockController _presentFloatingDockIfDismissedAnimated:YES completionHandler:nil]
+#define kMainSwitcherViewController [%c(SBMainSwitcherViewController) sharedInstance]
+#define kIsMainSwitcherVisible [kMainSwitcherViewController isMainSwitcherVisible]
+
+//	iOS12
+#define kIsShowingSpotlightOrTodayView [kIconController isShowingSpotlightOrTodayView]
+#define kIsVisible [kMainSwitcherViewController isVisible]
+#define kFloatingDockController12 [%c(SBFloatingDockController) sharedInstance]
+#define kDismissFloatingDockIfPresented12 [kFloatingDockController12 _dismissFloatingDockIfPresentedAnimated:YES completionHandler:nil]
+#define kPresentFloatingDockIfDismissed12 [kFloatingDockController12 _presentFloatingDockIfDismissedAnimated:YES completionHandler:nil]
 
 NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 
@@ -32,6 +44,7 @@ static bool enableTweak;
 static long long switcherStyle;
 
 static bool showStatusBarInAppSwitcher;
+static bool showDockInAppSwitcher;
 
 static bool showAppIcon;
 static bool showAppName;
@@ -52,6 +65,239 @@ static NSString *homeScreenOpacity;
 static NSString *homeScreenBlur;
 static NSString *dimmingAlpha;
 
+%hook SBFluidSwitcherIconImageContainerView
+- (void)didMoveToWindow {
+	%orig;
+	if ( !showAppIcon ) {
+		self.hidden = YES;
+	}
+}
+%end
+
+%hook SBFluidSwitcherItemContainer
+- (void)setTitleOpacity:(double)arg1 {
+	if ( !showAppName ) {
+		arg1 = 0;
+	}
+	%orig;
+}
+%end
+
+%hook SBAppSwitcherSettings
+- (void)setSwitcherStyle:(long long)arg1 {
+	arg1 = switcherStyle;
+	%orig;
+}
+- (double)deckSwitcherPageScale {
+	double origValue = %orig;
+	if ( deckCardScaleInSwitcher.length > 0 ) {
+		return origValue * [deckCardScaleInSwitcher doubleValue] / 100;
+	}
+	return origValue;
+}
+- (double)depthPadding {
+	double origValue = %orig;
+	if ( deckDepthPadding.length > 0 ) {
+		return [deckDepthPadding doubleValue] / 100;
+	}
+	return origValue;
+}
+- (double)gridSwitcherPageScale {
+	double origValue = %orig;
+	if ( gridCardScaleInSwitcher.length > 0 ) {
+		return origValue * [gridCardScaleInSwitcher doubleValue] / 100;
+	}
+	return origValue;
+}
+- (double)gridSwitcherVerticalNaturalSpacingPortrait {
+	double origValue = %orig;
+	if ( gridYAxisSpacingPortrait.length > 0 ) {
+		return [gridYAxisSpacingPortrait doubleValue];
+	}
+	return origValue;
+}
+- (double)gridSwitcherHorizontalInterpageSpacingPortrait {
+	double origValue = %orig;
+	if ( gridXAxisSpacingPortrait.length > 0 ) {
+		return [gridXAxisSpacingPortrait doubleValue];
+	}
+	return origValue;
+}
+- (double)gridSwitcherVerticalNaturalSpacingLandscape {
+	double origValue = %orig;
+	if ( gridYAxisSpacingLandscape.length > 0 ) {
+		return [gridYAxisSpacingLandscape doubleValue];
+	}
+	return origValue;
+}
+- (double)gridSwitcherHorizontalInterpageSpacingLandscape {
+	double origValue = %orig;
+	if ( gridXAxisSpacingLandscape.length > 0 ) {
+		return [gridXAxisSpacingLandscape doubleValue];
+	}
+	return origValue;
+}
+%end
+
+%hook SBFluidSwitcherAnimationSettings
+- (void)setWallpaperScaleInSwitcher:(double)arg1 {
+	if ( wallpaperScale.length > 0 ) {
+		arg1 = [wallpaperScale doubleValue] / 100;
+	}
+	%orig;
+}
+- (void)setHomeScreenScaleInSwitcher:(double)arg1 {
+	if ( homeScreenScale.length > 0 ) {
+		arg1 = [homeScreenScale doubleValue] / 100;
+	}
+	%orig;
+}
+- (void)setHomeScreenOpacityInSwitcher:(double)arg1 {
+	if ( homeScreenOpacity.length > 0 ) {
+		arg1 = [homeScreenOpacity doubleValue] / 100;
+	}
+	%orig;
+}
+- (void)setHomeScreenBlurInSwitcher:(double)arg1 {
+	if ( homeScreenBlur.length > 0 ) {
+		arg1 = [homeScreenBlur doubleValue] / 100;
+	}
+	%orig;
+}
+- (void)setDimmingAlphaInSwitcher:(double)arg1 {
+	if ( dimmingAlpha.length > 0 ) {
+		arg1 = [dimmingAlpha doubleValue] / 100;
+	}
+	%orig;
+}
+%end
+
+%hook SBMainSwitcherViewController
+- (void)switcherContentController:(id)arg1 setContainerStatusBarHidden:(bool)arg2 animationDuration:(double)arg3 {
+	if ( showStatusBarInAppSwitcher && [self isMainSwitcherVisible]) {
+		arg2 = NO;
+	}
+	%orig;
+}
+%end
+
+%hook SBSwitcherAppSuggestionViewController
+- (void)loadView {
+	if ( !allowAppSuggestion ) {
+		return;
+	}
+	%orig;
+}
+%end
+
+%group iOS13
+
+%hook SBDeckSwitcherModifier
+- (bool)shouldConfigureInAppDockHiddenAssertion {
+//	works only for deck switcher
+	bool origValue = %orig;
+	if ( !showDockInAppSwitcher ) {
+		return YES;
+	}
+	return origValue;
+}
+%end
+
+%hook SBGridSwitcherViewController
+- (bool)isWindowVisible {
+//	triggers correctly but when grid switcher is opened from today/spotlight/library dock is showing back
+	bool origValue = %orig;
+	if ( !showDockInAppSwitcher ) {
+		if ( origValue ) {
+			if ( kIsMainSwitcherVisible ) {
+				kDismissFloatingDockIfPresented;
+			}
+		}
+	}
+	return origValue;
+}
+%end
+
+%hook SBMainSwitcherViewController
+- (bool)isMainSwitcherVisible {
+//	works but triggers after switcher is visible - using this one to prevent reappearing of dock when grid switcher is opened from today/spotlight/library
+	bool origValue = %orig;
+	if ( !showDockInAppSwitcher ) {
+		if (origValue) {
+			kDismissFloatingDockIfPresented;
+		}
+	}
+	return origValue;
+}
+%end
+
+%hook _SBGridFloorSwitcherModifier
+- (id)appLayoutToScrollToBeforeTransitioning {
+//	present dock back when last app was closed or when grid app switcher is empty
+	id origValue = %orig;
+	if ( !showDockInAppSwitcher && !origValue ) {
+		if (kIsiOS14AndUp) {
+			if (![kIconController isTodayOverlayPresented] && ![kIconController isLibraryOverlayPresented] && ![kIconController isAnySearchVisibleOrTransitioning]) {
+				kPresentFloatingDockIfDismissed;
+			}
+		} else {
+			if ( ![[kIconController iconManager] isShowingSpotlightOrTodayView] ) {
+				kPresentFloatingDockIfDismissed;
+			}
+		}
+	}
+	return origValue;
+}
+%end
+
+%end
+
+%group iOS12
+
+%hook SBDeckSwitcherPersonality
+- (bool)_isPerformingSlideOffTransitionFromSwitcherToHomeScreen {
+//	0 = home to switcher, switcher to app (tap), switcher to app (button), app to switcher, close app, close last app,
+//	1 = switcher to home (tap), switcher to home (button),
+//	nil = home to empty
+	bool origValue = %orig;
+	if ( !showDockInAppSwitcher && origValue && !kIsShowingSpotlightOrTodayView ) {
+//	show dock when user switches back to homescreen and today view or spotlight search are not open
+		kPresentFloatingDockIfDismissed12;
+	} else if ( !showDockInAppSwitcher && kIsVisible ) {
+//	hide dock when user opens deck app switcher
+		kDismissFloatingDockIfPresented12;
+	}
+	return origValue;
+}
+- (id)topMostAppLayout {
+//	show dock after last app is closed
+	id origValue = %orig;
+	if ( !showDockInAppSwitcher && !origValue && !kIsShowingSpotlightOrTodayView ) {
+		kPresentFloatingDockIfDismissed12;
+	}
+	return origValue;
+}
+%end
+
+%hook SBGridSwitcherPersonality
+- (bool)_isPerformingSlideOffTransitionFromSwitcherToHomeScreen {
+//	0 = home to switcher, switcher to app (tap), switcher to app (button), app to switcher, close app, close last app,
+//	1 = switcher to home (tap), switcher to home (button),
+//	nil = home to empty
+	bool origValue = %orig;
+	if ( !showDockInAppSwitcher && origValue && !kIsShowingSpotlightOrTodayView ) {
+//	show dock when user switches back to homescreen and today view or spotlight search are not open
+		kPresentFloatingDockIfDismissed12;
+	} else if ( !showDockInAppSwitcher && kIsVisible ) {
+//	hide dock when user opens grid app switcher
+		kDismissFloatingDockIfPresented12;
+	}
+	return origValue;
+}
+%end
+
+%end
+
 void SettingsChanged() {
 	NSUserDefaults *tweakSettings = [[NSUserDefaults alloc] initWithSuiteName:domainString];
 
@@ -60,6 +306,7 @@ void SettingsChanged() {
 	switcherStyle = [([tweakSettings valueForKey:@"switcherStyle"] ?: @(0)) integerValue];
 
 	showStatusBarInAppSwitcher = [([tweakSettings objectForKey:@"showStatusBarInAppSwitcher"] ?: @(NO)) boolValue];
+	showDockInAppSwitcher = [([tweakSettings objectForKey:@"showDockInAppSwitcher"] ?: @(YES)) boolValue];
 
 	showAppIcon = [([tweakSettings objectForKey:@"showAppIcon"] ?: @(YES)) boolValue];
 	showAppName = [([tweakSettings objectForKey:@"showAppName"] ?: @(YES)) boolValue];
@@ -81,133 +328,6 @@ void SettingsChanged() {
 	dimmingAlpha = [tweakSettings objectForKey:@"dimmingAlpha"];
 }
 
-%hook SBFluidSwitcherIconImageContainerView
-- (void)didMoveToWindow {
-	%orig;
-	if ( enableTweak && !showAppIcon ) {
-		self.hidden = YES;
-	}
-}
-%end
-
-%hook SBFluidSwitcherItemContainer
-- (void)setTitleOpacity:(double)arg1 {
-	if ( enableTweak && !showAppName ) {
-		arg1 = 0;
-	}
-	%orig;
-}
-%end
-
-%hook SBAppSwitcherSettings
-- (void)setSwitcherStyle:(long long)arg1 {
-	if ( enableTweak ) {
-		arg1 = switcherStyle;
-	}
-	%orig;
-}
-- (double)deckSwitcherPageScale {
-	double origValue = %orig;
-	if ( enableTweak && deckCardScaleInSwitcher.length > 0 ) {
-		return origValue * [deckCardScaleInSwitcher doubleValue] / 100;
-	}
-	return origValue;
-}
-- (double)depthPadding {
-	double origValue = %orig;
-	if ( enableTweak && deckDepthPadding.length > 0 ) {
-		return [deckDepthPadding doubleValue] / 100;
-	}
-	return origValue;
-}
-- (double)gridSwitcherPageScale {
-	double origValue = %orig;
-	if ( enableTweak && gridCardScaleInSwitcher.length > 0 ) {
-		return origValue * [gridCardScaleInSwitcher doubleValue] / 100;
-	}
-	return origValue;
-}
-- (double)gridSwitcherVerticalNaturalSpacingPortrait {
-	double origValue = %orig;
-	if ( enableTweak && gridYAxisSpacingPortrait.length > 0 ) {
-		return [gridYAxisSpacingPortrait doubleValue];
-	}
-	return origValue;
-}
-- (double)gridSwitcherHorizontalInterpageSpacingPortrait {
-	double origValue = %orig;
-	if ( enableTweak && gridXAxisSpacingPortrait.length > 0 ) {
-		return [gridXAxisSpacingPortrait doubleValue];
-	}
-	return origValue;
-}
-- (double)gridSwitcherVerticalNaturalSpacingLandscape {
-	double origValue = %orig;
-	if ( enableTweak && gridYAxisSpacingLandscape.length > 0 ) {
-		return [gridYAxisSpacingLandscape doubleValue];
-	}
-	return origValue;
-}
-- (double)gridSwitcherHorizontalInterpageSpacingLandscape {
-	double origValue = %orig;
-	if ( enableTweak && gridXAxisSpacingLandscape.length > 0 ) {
-		return [gridXAxisSpacingLandscape doubleValue];
-	}
-	return origValue;
-}
-%end
-
-%hook SBFluidSwitcherAnimationSettings
-- (void)setWallpaperScaleInSwitcher:(double)arg1 {
-	if ( enableTweak && wallpaperScale.length > 0 ) {
-		arg1 = [wallpaperScale doubleValue] / 100;
-	}
-	%orig;
-}
-- (void)setHomeScreenScaleInSwitcher:(double)arg1 {
-	if ( enableTweak && homeScreenScale.length > 0 ) {
-		arg1 = [homeScreenScale doubleValue] / 100;
-	}
-	%orig;
-}
-- (void)setHomeScreenOpacityInSwitcher:(double)arg1 {
-	if ( enableTweak && homeScreenOpacity.length > 0 ) {
-		arg1 = [homeScreenOpacity doubleValue] / 100;
-	}
-	%orig;
-}
-- (void)setHomeScreenBlurInSwitcher:(double)arg1 {
-	if ( enableTweak && homeScreenBlur.length > 0 ) {
-		arg1 = [homeScreenBlur doubleValue] / 100;
-	}
-	%orig;
-}
-- (void)setDimmingAlphaInSwitcher:(double)arg1 {
-	if ( enableTweak && dimmingAlpha.length > 0 ) {
-		arg1 = [dimmingAlpha doubleValue] / 100;
-	}
-	%orig;
-}
-%end
-
-%hook SBMainSwitcherViewController
-- (void)switcherContentController:(id)arg1 setContainerStatusBarHidden:(bool)arg2 animationDuration:(double)arg3 {
-	if ( enableTweak && showStatusBarInAppSwitcher && [self isMainSwitcherVisible]) {
-		arg2 = NO;
-	}
-	%orig;
-}
-%end
-
-%hook SBSwitcherAppSuggestionViewController
-- (void)loadView {
-	if ( enableTweak && !allowAppSuggestion ) {
-		return;
-	}
-	%orig;
-}
-%end
-
 %ctor {
 	SettingsChanged();
 	CFNotificationCenterAddObserver(
@@ -218,5 +338,12 @@ void SettingsChanged() {
 		NULL,
 		CFNotificationSuspensionBehaviorDeliverImmediately
 	);
-	%init;
+	if ( enableTweak ) {
+		if ( kIsiOS13AndUp ) {
+			%init(iOS13);
+		} else {
+			%init(iOS12);
+		}
+		%init(_ungrouped);
+	}
 }

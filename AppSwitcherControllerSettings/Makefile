@@ -5,7 +5,7 @@ include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = AppSwitcherControllerSettings
 
-$(BUNDLE_NAME)_FILES = AppSwitcherControllerMainSettings.mm
+$(BUNDLE_NAME)_FILES = AppSwitcherControllerRootSettings.mm
 $(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles
 $(BUNDLE_NAME)_FRAMEWORKS = UIKit
 $(BUNDLE_NAME)_PRIVATE_FRAMEWORKS = Preferences

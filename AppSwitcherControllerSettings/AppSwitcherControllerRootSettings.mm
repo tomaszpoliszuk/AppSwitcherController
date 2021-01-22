@@ -41,12 +41,12 @@ NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 - (void)sendActions:(id)arg1 withResult:(id /* block */)arg2;
 @end
 
-@interface AppSwitcherControllerMainSettings : PSListController {
+@interface AppSwitcherControllerRootSettings : PSListController {
 	NSMutableArray *removeSpecifiers;
 }
 @end
 
-@implementation AppSwitcherControllerMainSettings
+@implementation AppSwitcherControllerRootSettings
 - (NSArray *)specifiers {
 	if (!_specifiers) {
 		_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
@@ -55,7 +55,7 @@ NSString *const domainString = @"com.tomaszpoliszuk.appswitchercontroller";
 			for(PSSpecifier* specifier in _specifiers) {
 				NSString* key = [specifier propertyForKey:@"key"];
 				if(
-					[key hasPrefix:@"showStatusBarInAppSwitcherGroup"]
+					[key hasPrefix:@"showStatusBarInAppSwitcher"]
 				) {
 					[removeSpecifiers addObject:specifier];
 				}
